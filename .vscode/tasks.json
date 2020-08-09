@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "type": "shell",
+    "cwd": "${workspaceFolder}",
+    "tasks": [
+        {
+            "command": "go build",
+            "label": "build",
+            "group": "build",
+        },
+        {
+            "command": "echo \"Starting server...\"; ./closest-flight-api",
+            "label": "build",
+            "group": "build",
+        },
+        {
+            "command": "go test",
+            "label": "test",
+            "args": ["test", "-v", "./..."],
+            "group": "test",
+        },
+    ],
+}
