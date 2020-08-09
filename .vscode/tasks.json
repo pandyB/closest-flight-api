@@ -4,14 +4,15 @@
     "cwd": "${workspaceFolder}",
     "tasks": [
         {
-            "command": "go build",
+            "command": "echo \"go build -o ${workspaceFolder}/bin/closest-flight-api\"; go build -o ${workspaceFolder}/bin/closest-flight-api",
             "label": "build",
             "group": "build",
         },
         {
-            "command": "echo \"Starting server...\"; ./closest-flight-api",
-            "label": "build",
+            "command": "echo \"Starting server...\"; ${workspaceFolder}/bin/closest-flight-api",
+            "label": "start-server",
             "group": "build",
+            "dependsOn": "build"
         },
         {
             "command": "go test",

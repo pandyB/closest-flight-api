@@ -5,16 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	//	"github.com/gorilla/mux"
+
+	"github.com/gorilla/mux"
 )
 
-/*
-type Article struct {
-	Title   string `json:"Title"`
-	Desc    string `json:"desc"`
-	Content string `json:"content"`
-}
-*/
 // Global array to store the different articles
 // simulating a database for now
 var Articles []Article
@@ -25,20 +19,24 @@ func homePage(writer http.ResponseWriter, req *http.Request) {
 }
 
 func handleRequests() {
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/articles", returnAllArticles)
-	log.Fatal(http.ListenAndServe(":10000", nil))
+	// create a new mux router
+	myRouter := mux.NewRouter().StrictSlash(true)
+
+	myRouter.HandleFunc("/", homePage)
+	myRouter.HandleFunc("/articles", returnAllArticles)
+	log.Fatal(http.ListenAndServe(":10000", myRouter))
 }
 
 func returnAllArticles(writer http.ResponseWriter, req *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllArticles (yup yup yup)")
+	fmt.Println("Endpoint Hit: returnAllArticles")
 	json.NewEncoder(writer).Encode(Articles)
 }
 
 func main() {
+	fmt.Println("Rest API v2.0  - Mux Router introduced")
 	Articles = []Article{
 		{Title: "Hello", Desc: "Art Desc", Content: "My Content"},
-		{Title: "Hello", Desc: "Art Desc", Content: "My Content"},
+		{Title: "Hello 2", Desc: "Art Desc", Content: "My Content"},
 	}
 	handleRequests()
 }
