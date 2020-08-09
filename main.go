@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -24,6 +25,9 @@ func handleRequests() {
 
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/articles", returnAllArticles)
+	// NOTE: Ordering is important here! This has to be defined before
+	// the other `/article` endpoint.
+	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
 	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
 	log.Fatal(http.ListenAndServe(":10000", myRouter))
 }
@@ -44,6 +48,20 @@ func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(article)
 		}
 	}
+}
+
+func createNewArticle(w http.ResponseWriter, r *http.Request) {
+	// get the body of our POST request
+	// return the string response containing the request body
+	// append this to our Articles array.
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var article Article
+	json.Unmarshal(reqBody, &article)
+	// update our global Articles array to include
+	// our new Article
+	Articles = append(Articles, article)
+
+	json.NewEncoder(w).Encode(article)
 }
 
 func main() {
