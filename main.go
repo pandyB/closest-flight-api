@@ -25,6 +25,8 @@ func handleRequests() {
 
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/articles", returnAllArticles)
+	myRouter.HandleFunc("/flights", forwardOpenSkyState)
+
 	// NOTE: Ordering is important here! This has to be defined before
 	// the other `/article` endpoint.
 	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
@@ -35,6 +37,33 @@ func handleRequests() {
 func returnAllArticles(writer http.ResponseWriter, req *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllArticles")
 	json.NewEncoder(writer).Encode(Articles)
+}
+
+type AirplaneStates struct {
+	Time int64 `json:"time"`
+	//States []FlightState `json:"states"`
+	States [][]interface{} `json:"states"`
+}
+
+type Vector struct {
+	Time int64
+	Name string
+}
+
+type MyData struct {
+	Dog []Vector
+}
+
+func forwardOpenSkyState(writer http.ResponseWriter, req *http.Request) {
+	resp, _ := http.Get("https://opensky-network.org/api/states/all")
+	body, _ := ioutil.ReadAll(resp.Body)
+	var data AirplaneStates
+	json.Unmarshal([]byte(body), &data)
+	fmt.Printf("Results: %v\n", data.Time)
+	fmt.Printf("Results: %v\n", data.States[0])
+	fs := FlightState{data: data.States[0]}
+	fmt.Printf("Flight State: %v\n", *fs.getLong())
+	fmt.Printf("Flight State: %v\n", *fs.getLat())
 }
 
 func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
