@@ -40,8 +40,7 @@ func returnAllArticles(writer http.ResponseWriter, req *http.Request) {
 }
 
 type AirplaneStates struct {
-	Time int64 `json:"time"`
-	//States []FlightState `json:"states"`
+	Time   int64           `json:"time"`
 	States [][]interface{} `json:"states"`
 }
 
