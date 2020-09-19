@@ -61,8 +61,14 @@ func forwardOpenSkyState(writer http.ResponseWriter, req *http.Request) {
 	fmt.Printf("Results: %v\n", data.Time)
 	fmt.Printf("Results: %v\n", data.States[0])
 	fs := FlightState{data: data.States[0]}
+	var flightStatesArray []FlightState
+	for _, data := range data.States {
+		flightStatesArray = append(flightStatesArray, *newFlightStateFromSeqenuence(data))
+	}
+	fmt.Println(flightStatesArray[0])
 	fmt.Printf("Flight State: %v\n", *fs.getLong())
 	fmt.Printf("Flight State: %v\n", *fs.getLat())
+	json.NewEncoder(writer).Encode(flightStatesArray)
 }
 
 func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
