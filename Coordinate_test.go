@@ -33,3 +33,11 @@ func TestInvalidCoordinate(t *testing.T) {
 		t.Errorf("Expected error for invalid coordinates")
 	}
 }
+
+func TestHashCoordinate(t *testing.T) {
+	coordA, _ := NewHashedCoordinateFromLatLong(45.1, -86.07)
+	coordB, _ := NewHashedCoordinateFromLatLong(44.27, -87.88)
+	fmt.Println(coordA.IsNear(coordB))
+	coordC, _ := NewHashedCoordinateFromLatLong(44.27, -40.88)
+	fmt.Println(coordA.IsNear(coordC))
+}
